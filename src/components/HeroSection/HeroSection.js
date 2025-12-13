@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import './HeroSection.css';
 import ContactModal from '../ContactModal/ContactModal';
-import heroDesktop from '../../assets/images/hero/desktop.webp';
-import heroTablet from '../../assets/images/hero/tablet.webp';
-import heroMobile from '../../assets/images/hero/mobile.webp';
+import heroDesktop from '../../assets/images/hero/restaurant-desktop.webp';
+import heroTablet from '../../assets/images/hero/restaurant-tablet.webp';
+import heroMobile from '../../assets/images/hero/restaurant-mobile.webp';
 import { Button } from '@mui/material';
+import { Box } from "@mui/material";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const HeroSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,7 +59,34 @@ const HeroSection = () => {
    Obtenir mon site pro
 </Button>
         </div>
+    
+
+      <Box
+          sx={{
+            position: "absolute",
+            bottom: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+            color: "white",
+            animation: "bounce 2s infinite",
+            cursor: "pointer",
+            zIndex: 5
+          }}
+          onClick={() => {
+            const nextSection = document.getElementById("hero-carousel");
+            if (nextSection) {
+              nextSection.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+        >
+          <KeyboardArrowDownIcon sx={{ fontSize: 40 }} />
+        </Box>
       </section>
+
+      <ContactModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
 
       {/* AJOUT : le ContactModal en dehors de la section hero */}
       <ContactModal 

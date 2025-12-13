@@ -42,12 +42,51 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Navigation items
+  // Navigation items - Contact est maintenant un défilement
   const navItems = [
     { label: 'Services', path: '/services' },
     { label: 'FAQ', path: '/faq' },
-    { label: 'Contact', path: '/contact' }
+    { label: 'Contact', isScrollToFooter: true } // Nouveau type pour Contact
   ];
+
+  // Fonction pour faire défiler jusqu'au footer
+  const scrollToFooter = () => {
+    setIsMobileMenuOpen(false);
+    
+    // Si on est sur une autre page que l'accueil, on navigue d'abord
+    if (location.pathname !== '/') {
+      navigate('/');
+      
+      // Attendre un peu pour que la page se charge, puis défiler
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 100);
+    } else {
+      // Si on est déjà sur l'accueil, défiler directement
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Fonction de navigation pour les autres boutons
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsMobileMenuOpen(false);
+  };
+
+  // Fonction de gestion de clic unique pour tous les boutons
+  const handleItemClick = (item) => {
+    if (item.isScrollToFooter) {
+      scrollToFooter();
+    } else {
+      handleNavigation(item.path);
+    }
+  };
 
   // Animation variants
   const logoVariants = {
@@ -71,14 +110,11 @@ const Header = () => {
     })
   };
 
-  // Fonction de navigation
-  const handleNavigation = (path) => {
-    navigate(path);
-    setIsMobileMenuOpen(false);
+  // Vérifier si le lien est actif (uniquement pour les pages)
+  const isActive = (item) => {
+    if (item.isScrollToFooter) return false;
+    return location.pathname === item.path;
   };
-
-  // Vérifier si le lien est actif
-  const isActive = (path) => location.pathname === path;
 
   return (
     <>
@@ -142,10 +178,10 @@ const Header = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Button
-                    onClick={() => handleNavigation(item.path)}
+                    onClick={() => handleItemClick(item)}
                     sx={{ 
-                      color: isActive(item.path) ? primaryColor : '#333',
-                      fontWeight: isActive(item.path) ? 'bold' : 500,
+                      color: isActive(item) ? primaryColor : '#333',
+                      fontWeight: isActive(item) ? 'bold' : 500,
                       fontSize: '1rem',
                       position: 'relative',
                       '&:hover': { 
@@ -155,7 +191,7 @@ const Header = () => {
                     }}
                   >
                     {item.label}
-                    {isActive(item.path) && (
+                    {isActive(item) && (
                       <motion.div
                         layoutId="activeTab"
                         style={{
@@ -236,7 +272,7 @@ const Header = () => {
               sx={{
                 borderRadius: 2,
                 mb: 1,
-                backgroundColor: isActive('/') ? `rgba(139, 92, 246, 0.1)` : 'transparent',
+                backgroundColor: location.pathname === '/' ? `rgba(139, 92, 246, 0.1)` : 'transparent',
                 '&:hover': {
                   backgroundColor: `rgba(139, 92, 246, 0.1)`
                 }
@@ -245,8 +281,8 @@ const Header = () => {
               <ListItemText 
                 primary="Accueil" 
                 primaryTypographyProps={{ 
-                  fontWeight: isActive('/') ? 'bold' : 500,
-                  color: isActive('/') ? primaryColor : '#333'
+                  fontWeight: location.pathname === '/' ? 'bold' : 500,
+                  color: location.pathname === '/' ? primaryColor : '#333'
                 }}
               />
             </ListItem>
@@ -260,11 +296,11 @@ const Header = () => {
                 transition={{ duration: 0.2 }}
               >
                 <ListItem 
-                  onClick={() => handleNavigation(item.path)}
+                  onClick={() => handleItemClick(item)}
                   sx={{
                     borderRadius: 2,
                     mb: 1,
-                    backgroundColor: isActive(item.path) ? `rgba(139, 92, 246, 0.1)` : 'transparent',
+                    backgroundColor: isActive(item) ? `rgba(139, 92, 246, 0.1)` : 'transparent',
                     '&:hover': {
                       backgroundColor: `rgba(139, 92, 246, 0.1)`
                     }
@@ -273,8 +309,8 @@ const Header = () => {
                   <ListItemText 
                     primary={item.label} 
                     primaryTypographyProps={{ 
-                      fontWeight: isActive(item.path) ? 'bold' : 500,
-                      color: isActive(item.path) ? primaryColor : '#333'
+                      fontWeight: isActive(item) ? 'bold' : 500,
+                      color: isActive(item) ? primaryColor : '#333'
                     }}
                   />
                 </ListItem>

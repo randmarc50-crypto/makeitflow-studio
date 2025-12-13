@@ -17,13 +17,13 @@ function App() {
       <CssBaseline />
       <Router>
         <Header />
-
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
           <Route path="/faq" element={<FaqPage />} />
         </Routes>
-
+        
       </Router>
     </ThemeProvider>
   );
