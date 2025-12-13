@@ -17,7 +17,9 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+
+// Import du logo depuis src/assets
+import logo from '../../assets/logo.png';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,6 +28,10 @@ const Header = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Couleurs violet/blanc
+  const primaryColor = '#8B5CF6';
+  const hoverColor = '#7C3AED';
 
   // Gestion du scroll
   useEffect(() => {
@@ -39,7 +45,7 @@ const Header = () => {
   // Navigation items
   const navItems = [
     { label: 'Services', path: '/services' },
-    { label: 'Portfolio', path: '/portfolio' },
+    { label: 'FAQ', path: '/faq' },
     { label: 'Contact', path: '/contact' }
   ];
 
@@ -65,17 +71,6 @@ const Header = () => {
     })
   };
 
-  const ctaButtonVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { duration: 0.5, delay: 0.2 }
-    },
-    hover: { scale: 1.05 },
-    tap: { scale: 0.95 }
-  };
-
   // Fonction de navigation
   const handleNavigation = (path) => {
     navigate(path);
@@ -93,7 +88,7 @@ const Header = () => {
         sx={{
           backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.98)' : 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(10px)',
-          borderBottom: isScrolled ? '1px solid rgba(0,0,0,0.08)' : 'none',
+          borderBottom: isScrolled ? '1px solid rgba(139, 92, 246, 0.1)' : 'none',
           transition: 'all 0.3s ease',
           py: isScrolled ? 0.5 : 1,
           px: { xs: 2, md: 4 }
@@ -106,39 +101,31 @@ const Header = () => {
           width: '100%'
         }}>
           
-          {/* Logo avec animation */}
+          {/* Logo avec animation - sans texte */}
           <motion.div
             variants={logoVariants}
             initial="hidden"
             animate="visible"
-            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              cursor: 'pointer',
+              height: '100%'
+            }}
             onClick={() => navigate('/')}
           >
-            <RestaurantMenuIcon sx={{ 
-              color: '#e63946', 
-              fontSize: { xs: 28, md: 32 },
-              mr: 1 
-            }} />
-            <Box sx={{ 
-              fontSize: { xs: '1.3rem', md: '1.5rem' }, 
-              fontWeight: 'bold',
-              background: 'linear-gradient(45deg, #e63946, #f4a261)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              display: { xs: 'none', sm: 'block' }
-            }}>
-              Make it Flow
-            </Box>
-            <Box sx={{ 
-              fontSize: '1.3rem', 
-              fontWeight: 'bold',
-              background: 'linear-gradient(45deg, #e63946, #f4a261)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              display: { xs: 'block', sm: 'none' }
-            }}>
-              MIF
-            </Box>
+            {/* Logo image */}
+            <Box
+              component="img"
+              src={logo}
+              alt="Make it Flow Logo"
+              sx={{
+                height: { xs: isScrolled ? '35px' : '40px', md: isScrolled ? '45px' : '50px' },
+                width: 'auto',
+                transition: 'all 0.3s ease',
+                objectFit: 'contain'
+              }}
+            />
           </motion.div>
 
           {/* Navigation Desktop */}
@@ -157,12 +144,12 @@ const Header = () => {
                   <Button
                     onClick={() => handleNavigation(item.path)}
                     sx={{ 
-                      color: isActive(item.path) ? '#e63946' : '#333',
+                      color: isActive(item.path) ? primaryColor : '#333',
                       fontWeight: isActive(item.path) ? 'bold' : 500,
                       fontSize: '1rem',
                       position: 'relative',
                       '&:hover': { 
-                        color: '#e63946',
+                        color: hoverColor,
                         backgroundColor: 'transparent'
                       }
                     }}
@@ -177,7 +164,7 @@ const Header = () => {
                           left: 0,
                           right: 0,
                           height: 2,
-                          backgroundColor: '#e63946',
+                          backgroundColor: primaryColor,
                           borderRadius: 2
                         }}
                       />
@@ -185,35 +172,6 @@ const Header = () => {
                   </Button>
                 </motion.div>
               ))}
-              
-              {/* Bouton CTA Desktop */}
-              <motion.div
-                variants={ctaButtonVariants}
-                initial="hidden"
-                animate="visible"
-                whileHover="hover"
-                whileTap="tap"
-              >
-                <Button
-                  onClick={() => navigate('/contact')} // Vous pouvez créer une page de contact ou de devis
-                  variant="contained"
-                  sx={{
-                    background: 'linear-gradient(45deg, #e63946, #f4a261)',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    px: 3,
-                    py: 1,
-                    borderRadius: '50px',
-                    boxShadow: '0 4px 20px rgba(230, 57, 70, 0.3)',
-                    '&:hover': {
-                      background: 'linear-gradient(45deg, #d62828, #e76f51)',
-                      boxShadow: '0 6px 25px rgba(230, 57, 70, 0.4)'
-                    }
-                  }}
-                >
-                  Obtenir mon site pro
-                </Button>
-              </motion.div>
             </Box>
           )}
 
@@ -249,17 +207,23 @@ const Header = () => {
             alignItems: 'center',
             mb: 3 
           }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <RestaurantMenuIcon sx={{ color: '#e63946', mr: 1 }} />
-              <Box sx={{ 
-                fontSize: '1.3rem', 
-                fontWeight: 'bold',
-                background: 'linear-gradient(45deg, #e63946, #f4a261)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}>
-                Make it Flow
-              </Box>
+            <Box 
+              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              onClick={() => {
+                navigate('/');
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              <Box
+                component="img"
+                src={logo}
+                alt="Make it Flow Logo"
+                sx={{
+                  height: '35px',
+                  width: 'auto',
+                  objectFit: 'contain'
+                }}
+              />
             </Box>
             <IconButton onClick={() => setIsMobileMenuOpen(false)}>
               <CloseIcon />
@@ -272,9 +236,9 @@ const Header = () => {
               sx={{
                 borderRadius: 2,
                 mb: 1,
-                backgroundColor: isActive('/') ? 'rgba(230, 57, 70, 0.1)' : 'transparent',
+                backgroundColor: isActive('/') ? `rgba(139, 92, 246, 0.1)` : 'transparent',
                 '&:hover': {
-                  backgroundColor: 'rgba(230, 57, 70, 0.1)'
+                  backgroundColor: `rgba(139, 92, 246, 0.1)`
                 }
               }}
             >
@@ -282,7 +246,7 @@ const Header = () => {
                 primary="Accueil" 
                 primaryTypographyProps={{ 
                   fontWeight: isActive('/') ? 'bold' : 500,
-                  color: isActive('/') ? '#e63946' : '#333'
+                  color: isActive('/') ? primaryColor : '#333'
                 }}
               />
             </ListItem>
@@ -300,9 +264,9 @@ const Header = () => {
                   sx={{
                     borderRadius: 2,
                     mb: 1,
-                    backgroundColor: isActive(item.path) ? 'rgba(230, 57, 70, 0.1)' : 'transparent',
+                    backgroundColor: isActive(item.path) ? `rgba(139, 92, 246, 0.1)` : 'transparent',
                     '&:hover': {
-                      backgroundColor: 'rgba(230, 57, 70, 0.1)'
+                      backgroundColor: `rgba(139, 92, 246, 0.1)`
                     }
                   }}
                 >
@@ -310,40 +274,13 @@ const Header = () => {
                     primary={item.label} 
                     primaryTypographyProps={{ 
                       fontWeight: isActive(item.path) ? 'bold' : 500,
-                      color: isActive(item.path) ? '#e63946' : '#333'
+                      color: isActive(item.path) ? primaryColor : '#333'
                     }}
                   />
                 </ListItem>
               </motion.div>
             ))}
           </List>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            style={{ padding: 16 }}
-          >
-            <Button
-              onClick={() => handleNavigation('/contact')}
-              variant="contained"
-              fullWidth
-              sx={{
-                background: 'linear-gradient(45deg, #e63946, #f4a261)',
-                color: 'white',
-                fontWeight: 'bold',
-                py: 1.5,
-                borderRadius: '50px',
-                boxShadow: '0 4px 20px rgba(230, 57, 70, 0.3)',
-                '&:hover': {
-                  background: 'linear-gradient(45deg, #d62828, #e76f51)',
-                  boxShadow: '0 6px 25px rgba(230, 57, 70, 0.4)'
-                }
-              }}
-            >
-              Obtenir mon site pro
-            </Button>
-          </motion.div>
         </Box>
       </Drawer>
 

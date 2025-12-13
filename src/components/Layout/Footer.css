@@ -115,4 +115,53 @@
   .social-links {
     justify-content: center;
   }
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background-color: #333;
+  color: white;
+  transform: translateY(-3px);
+}
+
+.social-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+.contact-icon {
+  vertical-align: middle;
+  margin-right: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.footer-contact ul li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.footer-links ul li a:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+
 }
